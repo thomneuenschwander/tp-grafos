@@ -25,24 +25,42 @@ public class AdjacencyList implements UndirectedGraph {
         return graph.getOrDefault(v, new LinkedList<>());
     }
 
-
     @Override
     public boolean addEdge(int v, int w) {
-        boolean addedToU = false;
         boolean addedToV = false;
+        boolean addedToW = false;
 
         if (!graph.getOrDefault(v, new LinkedList<>()).contains(w)) {
             graph.computeIfAbsent(v, k -> new LinkedList<>()).add(w);
-            addedToU = true;
+            addedToV = true;
         }
 
         if (!graph.getOrDefault(w, new LinkedList<>()).contains(v)) {
             graph.computeIfAbsent(w, k -> new LinkedList<>()).add(v);
-            addedToV = true;
+            addedToW = true;
         }
 
-        return addedToU || addedToV;
+        return addedToV || addedToW;
     }
+
+    /*
+     * 
+     * Método que verifique a existência de dois caminhos internamente disjuntos 
+     * (ou um ciclo) entre cada par de vértices do bloco
+     * 
+     */
+    public boolean hasTwoInternallyDisjointPaths(int v, int w) {
+        var nbhdV = getNeighborhood(v);
+        var nbhdW = getNeighborhood(w);
+
+        if(nbhdV.size() < 2 || nbhdW.size() < 2)
+            return false;
+
+        
+
+        return true;
+    }
+
 
     @Override
     public int N() {
