@@ -1,8 +1,11 @@
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Thomas Neuenschwander
  * @since 13/09/2024
  */
+
+ 
 public class AdjacencyList implements UndirectedGraph {
     private Map<Integer, List<Integer>> graph = new HashMap<>();
 
@@ -130,5 +135,113 @@ public class AdjacencyList implements UndirectedGraph {
         var adjList = new AdjacencyList();
         UndirectedGraph.readGraphFile(filePath, adjList);
         return adjList;
+    }
+
+    @Override
+    public List<Set<Integer>> findBiconnectedComponents() {
+        List<Set<Integer>> biconnectedComponents = new ArrayList<>();
+        boolean[][] processed = new boolean[N() + 1][N() + 1]; 
+
+        for (int u = 1; u <= N(); u++) {
+            for (int v = u + 1; v <= N(); v++) {
+                if (!processed[u][v]) {
+                    if (hasTwoDisjointPaths(u, v)) {
+                        Set<Integer> componentU = null;
+                        Set<Integer> componentV = null;
+
+                        for (Set<Integer> component : biconnectedComponents) {
+                            if (component.contains(u))
+                                componentU = component;
+
+                            if (component.contains(v))
+                                componentV = component;
+                        }
+
+                        if (componentU == null && componentV == null) {
+                            Set<Integer> newComponent = new HashSet<>();
+                            newComponent.add(u);
+                            newComponent.add(v);
+                            biconnectedComponents.add(newComponent);
+                        } else if (componentU != null && componentV == null)
+                            componentU.add(v);
+                        else if (componentU == null && componentV != null)
+                            componentV.add(u);
+                        else if (componentU != componentV) {
+                            componentU.addAll(componentV);
+                            biconnectedComponents.remove(componentV);
+                        }
+                    }
+                    processed[u][v] = true;
+                    processed[v][u] = true;
+                }
+            }
+        }
+        return biconnectedComponents;
+    }
+
+    private boolean hasTwoDisjointPaths(int u, int v) {
+        if (!isReachable(u, v))
+            return false;
+
+        List<Integer> path1 = findPath(u, v);
+        for (int i = 0; i < path1.size() - 1; i++) {
+            int src = path1.get(i);
+            int dest = path1.get(i + 1);
+            graph.get(src).remove(Integer.valueOf(dest));
+            graph.get(dest).remove(Integer.valueOf(src));
+        }
+
+        boolean result = isReachable(u, v);
+
+        for (int i = 0; i < path1.size() - 1; i++) {
+            int src = path1.get(i);
+            int dest = path1.get(i + 1);
+            graph.get(src).add(dest);
+            graph.get(dest).add(src);
+        }
+
+        return result;
+    }
+
+    private boolean isReachable(int u, int v) {
+        boolean[] visited = new boolean[N() + 1]; 
+        return dfs(u, v, visited);
+    }
+
+    private boolean dfs(int u, int v, boolean[] visited) {
+        if (u == v)
+            return true;
+        visited[u] = true;
+
+        for (int neighbor : graph.get(u)) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, v, visited)) 
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Integer> findPath(int u, int v) {
+        List<Integer> path = new ArrayList<>();
+        findPath(u, v, new boolean[N() + 1], path);
+        return path;
+    }
+
+    private boolean findPath(int u, int v, boolean[] visited, List<Integer> path) {
+        path.add(u);
+        if (u == v)
+            return true;
+        visited[u] = true;
+
+        for (int neighbor : graph.get(u)) {
+            if (!visited[neighbor]) {
+                if (findPath(neighbor, v, visited, path))
+                    return true;
+            }
+        }
+
+        path.remove(path.size() - 1);
+        return false;
     }
 }

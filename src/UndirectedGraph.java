@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Collection;
+import java.util.Set;
 
 public interface UndirectedGraph {
 
@@ -23,6 +24,8 @@ public interface UndirectedGraph {
      * get Neighborhood N(v)
     */
     Collection<Integer> getNeighborhood(int v);
+
+    Collection<Set<Integer>> findBiconnectedComponents();
 
     /*
      * Undirected Graph Format:
