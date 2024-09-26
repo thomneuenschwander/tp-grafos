@@ -1,15 +1,9 @@
+package graph.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Collection;
-import java.util.Set;
 
 public interface UndirectedGraph {
-
-    /*
-     * add {v, w} to E(G) | {v, w} ∈ V(G)
-    */
-    boolean addEdge(int v, int w);
-
     /*
      * |V|
     */
@@ -21,11 +15,41 @@ public interface UndirectedGraph {
     int M();
 
     /*
+     * add {v, w} to E(G) | {v, w} ∈ V(G)
+    */
+    boolean addEdge(int v, int w);
+
+    /*
      * get Neighborhood N(v)
     */
     Collection<Integer> getNeighborhood(int v);
 
-    Collection<Set<Integer>> findBiconnectedComponents();
+    /**
+     * Checks if there is a path between two vertices u and v.
+     * Uses Depth-First Search (DFS) to verify connectivity between the vertices.
+     * 
+     * @param u The source vertex.
+     * @param v The target vertex.
+     * @return true if there is a path between u and v, false otherwise.
+    */
+    default boolean isReachable(int u, int v) {
+        boolean[] visited = new boolean[N() + 1];
+        return dfs(u, v, visited);
+    }
+
+    private boolean dfs(int u, int v, boolean[] visited) {
+        if (u == v)
+            return true;
+        visited[u] = true;
+
+        for (int neighbor : getNeighborhood(u)) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, v, visited))
+                    return true;
+            }
+        }
+        return false;
+    }
 
     /*
      * Undirected Graph Format:
@@ -55,7 +79,7 @@ public interface UndirectedGraph {
                 edgeCount++;
             }
             if (edgeCount != m) 
-                throw new IllegalArgumentException(
+                throw new IllegalStateException(
                     "Número de arestas no arquivo (" + edgeCount + ") difere do valor esperado (" + m + ").");
             
 
