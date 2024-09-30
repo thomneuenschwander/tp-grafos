@@ -2,6 +2,8 @@ package graph.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public interface UndirectedGraph {
     /*
@@ -23,6 +25,8 @@ public interface UndirectedGraph {
      * get Neighborhood N(v)
     */
     Collection<Integer> getNeighborhood(int v);
+
+    boolean isConnected(Set<Integer> block, int articulation, List<Integer> articulations);
 
     /**
      * Checks if there is a path between two vertices u and v.
@@ -49,6 +53,18 @@ public interface UndirectedGraph {
             }
         }
         return false;
+    }
+
+    default void dfs(int v, boolean[] visited, Set<Integer> block) {
+        visited[v] = true;
+
+        if(block != null) block.add(v);
+
+        for (int w : getNeighborhood(v)) {
+            if (!visited[w]) {
+                dfs(w, visited, block);
+            }
+        }
     }
 
     /*

@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Grafo nao direcionado representado por uma Lista de Adjacência
@@ -43,6 +44,16 @@ public class AdjacencyList implements UndirectedGraph {
         }
 
         return addedToV || addedToW;
+    }
+
+    @Override
+    public boolean isConnected(Set<Integer> block, int articulation, List<Integer> articulations){
+        for (int vertex : block) {
+            if (graph.get(vertex).contains(articulation) && !articulations.contains(vertex)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
