@@ -38,7 +38,12 @@ public class ArticulationsBlockIdentifier implements BlockIdentifier {
         }
         
         List<int[]> allBridges = UndirectedGraph.findBridges(graph);
-        allBridges.forEach(bridge -> blocks.add(Set.of(bridge[0], bridge[1])));
+        allBridges.forEach(bridge -> {
+            Set<Integer> block = Set.of(bridge[0], bridge[1]);
+            if (!blocks.contains(block)) {
+                blocks.add(block);
+            }
+        });
 
         return blocks;
     }
