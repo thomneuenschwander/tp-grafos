@@ -42,17 +42,24 @@ python3 test_generator.py "$N" "$FILE_PATH" "$FILE_PATH_RESP"
 
 # javac -d bin -sourcepath src $(find src -name "*.java")
 
-java -cp bin Tester 1 "$FILE_PATH" > "$TESTER_OUTPUT_FILE"
+sudo sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
 
-process_output() {
-    echo "$1" | tr -d '[]' | tr ',' ' ' | xargs -n1 | sort -n | xargs
-}
+start_time=$(date +%s%N)
+java -Xss32m -cp bin Tester "$METHOD" "$FILE_PATH" > "$TESTER_OUTPUT_FILE"
+end_time=$(date +%s%N)
 
-tester_blocks=$(process_output "$(cat $TESTER_OUTPUT_FILE)")
-python_blocks=$(process_output "$(cat $FILE_PATH_RESP)")
+elapsed_time=$(( (end_time - start_time) / 1000000 ))
+echo "Execution time: $elapsed_time ms"
 
-if [[ "$tester_blocks" == "$python_blocks" ]]; then
-    echo "The outputs match!"
-else
-    echo "The outputs do not match!"
-fi
+# process_output() {
+#     echo "$1" | tr -d '[]' | tr ',' ' ' | xargs -n1 | sort -n | xargs
+# }
+
+# tester_blocks=$(process_output "$(cat $TESTER_OUTPUT_FILE)")
+# python_blocks=$(process_output "$(cat $FILE_PATH_RESP)")
+
+# if [[ "$tester_blocks" == "$python_blocks" ]]; then
+#     echo "The outputs match!"
+# else
+#     echo "The outputs do not match!"
+# fi

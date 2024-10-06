@@ -6,19 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Grafo nao direcionado representado por uma Lista de Adjacência
- * 
- * references:
- * https://www.geeksforgeeks.org/graph-and-its-representations/
- * https://github.com/eugenp/tutorials/blob/master/data-structures/src/main/java/com/baeldung/graph/GraphTraversal.java
- * https://www.baeldung.com/java-graphs
- * Chat GPT 4o
- * 
- * @author Thomas Neuenschwander
- * @since 13/09/2024
- */
-
 public class AdjacencyList implements UndirectedGraph {
     private Map<Integer, List<Integer>> graph = new HashMap<>();
 

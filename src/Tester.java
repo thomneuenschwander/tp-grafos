@@ -26,7 +26,9 @@ public class Tester {
             default -> throw new IllegalArgumentException(errorMessage);
         };
 
-        blockIdentifier.identifyBlocks(graph).forEach(System.out::println);
+        blockIdentifier.identifyBlocks(graph);
+
+        // blockIdentifier.identifyBlocks(graph).forEach(System.out::println);
     }
 
     private static final String errorMessage = "Usage: <'1' for twoDisjointPaths, '2' for articulations, or '3' for tarjan> and <graph file pah>";
