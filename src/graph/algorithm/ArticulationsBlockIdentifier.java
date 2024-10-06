@@ -36,32 +36,10 @@ public class ArticulationsBlockIdentifier implements BlockIdentifier {
                 }
             }
         }
+        
+        List<int[]> allBridges = UndirectedGraph.findBridges(graph);
+        allBridges.forEach(bridge -> blocks.add(Set.of(bridge[0], bridge[1])));
 
-        for (int i = 0; i < articulations.size(); i++) {
-            for (int j = i + 1; j < articulations.size(); j++) {
-                int articulation1 = articulations.get(i);
-                int articulation2 = articulations.get(j);
-                
-                List<Integer> neighbors1 = (List<Integer>) graph.getNeighborhood(articulation1);
-                List<Integer> neighbors2 = (List<Integer>) graph.getNeighborhood(articulation2);
-
-                boolean isPonte = true;
-                
-                for (int neighbor: neighbors1) {
-                    if (neighbors2.contains(neighbor)) {
-                        isPonte = false;
-                        break;
-                    }
-                }
-                
-                if (isPonte) {
-                    Set<Integer> block = new HashSet<>();
-                    block.add(articulation1);
-                    block.add(articulation2);
-                    blocks.add(block); 
-                }
-            }
-        }
         return blocks;
     }
     
