@@ -1,4 +1,5 @@
 package graph.model;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,5 +85,10 @@ public class AdjacencyList implements UndirectedGraph {
         var adjList = new AdjacencyList();
         UndirectedGraph.readGraphFile(filePath, adjList);
         return adjList;
+    }
+
+    @Override
+    public List<Integer> V() {
+        return new ArrayList<>(graph.keySet());
     }
 }

@@ -12,7 +12,7 @@ public class ArticulationsBlockIdentifier implements BlockIdentifier {
     @Override
     public List<Set<Integer>> identifyBlocks(UndirectedGraph graph) {
         List<Integer> articulations = findArticulations(graph);
-        System.out.println("Articulations: " + articulations);
+        
         List<Set<Integer>> blocks = new ArrayList<>();
 
         boolean[] visited = new boolean[graph.N() + 2];
@@ -62,13 +62,10 @@ public class ArticulationsBlockIdentifier implements BlockIdentifier {
                 }
             }
         }
-        
-        
-
         return blocks;
     }
     
-    private List<Integer> findArticulations(UndirectedGraph graph) {
+    public static List<Integer> findArticulations(UndirectedGraph graph) {
         List<Integer> articulations = new ArrayList<>();
         for (int i = 1; i <= graph.N(); i++) {
             boolean[] visited = new boolean[graph.N() + 2];

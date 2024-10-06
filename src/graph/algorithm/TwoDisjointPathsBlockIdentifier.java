@@ -1,105 +1,101 @@
 package graph.algorithm;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import graph.model.UndirectedGraph;
 
 public class TwoDisjointPathsBlockIdentifier implements BlockIdentifier {
+    private UndirectedGraph graph;
+    private List<Set<Integer>> allCycles;
+    private List<int[]> allBridges;
+
     @Override
     public List<Set<Integer>> identifyBlocks(UndirectedGraph graph) {
-        List<Set<Integer>> blocks = new ArrayList<>();
-        boolean[][] processed = new boolean[graph.N() + 1][graph.N() + 1];
+        this.graph = graph;
+        allCycles = findAllCycles();
+        allBridges = UndirectedGraph.findBridges(graph);
 
-        for (int u = 1; u <= graph.N(); u++) {
-            for (int v = u + 1; v <= graph.N(); v++) {
-                if (!processed[u][v]) {
-                    if (hasTwoDisjointPaths(graph, u, v)) {
-                        Set<Integer> componentU = null;
-                        Set<Integer> componentV = null;
+        List<Set<Integer>> blocks = new LinkedList<>();
 
-                        for (Set<Integer> component : blocks) {
-                            if (component.contains(u))
-                                componentU = component;
-
-                            if (component.contains(v))
-                                componentV = component;
-                        }
-
-                        switch ((componentU != null ? 1 : 0) + (componentV != null ? 2 : 0)) {
-                            case 0 -> {
-                                Set<Integer> newComponent = new HashSet<>();
-                                newComponent.add(u);
-                                newComponent.add(v);
-                                blocks.add(newComponent);
-                            }
-
-                            case 1 -> componentU.add(v);
-
-                            case 2 -> componentV.add(u);
-
-                            case 3 -> {
-                                if (componentU != componentV) {
-                                    componentU.addAll(componentV);
-                                    blocks.remove(componentV);
-                                }
-                            }
-                        }
-
-                    }
-                    processed[u][v] = true;
-                    processed[v][u] = true;
+        for (int i = 1; i <= graph.N(); i++) {
+            Set<Integer> block = new HashSet<>();
+            for (int j = i + 1; j <= graph.N(); j++) {
+                if (hasTwoDisjointPaths(i, j)) {
+                    block.add(i);
+                    block.add(j);
                 }
             }
+            if (!block.isEmpty())
+                blocks.add(block);
         }
-        return blocks;
+        List<Set<Integer>> trimBlocks = removeSubsets(blocks);
+        allBridges.forEach(bridge -> trimBlocks.add(Set.of(bridge[0], bridge[1])));
+        return trimBlocks;
     }
 
-    private boolean hasTwoDisjointPaths(UndirectedGraph graph, int u, int v) {
-        if (!graph.isReachable(u, v))
-            return false;
+    private List<Set<Integer>> removeSubsets(List<Set<Integer>> blocks) {
+        List<Set<Integer>> filteredBlocks = new LinkedList<>();
 
-        List<Integer> path1 = findPath(graph, u, v);
-        for (int i = 0; i < path1.size() - 1; i++) {
-            int src = path1.get(i);
-            int dest = path1.get(i + 1);
-            graph.getNeighborhood(src).remove(Integer.valueOf(dest));
-            graph.getNeighborhood(dest).remove(Integer.valueOf(src));
-        }
-
-        boolean result = graph.isReachable(u, v);
-
-        for (int i = 0; i < path1.size() - 1; i++) {
-            int src = path1.get(i);
-            int dest = path1.get(i + 1);
-            graph.getNeighborhood(src).add(dest);
-            graph.getNeighborhood(dest).add(src);
-        }
-
-        return result;
-    }
-
-    private List<Integer> findPath(UndirectedGraph graph, int u, int v) {
-        List<Integer> path = new ArrayList<>();
-        findPath(graph, u, v, new boolean[graph.N() + 1], path);
-        return path;
-    }
-
-    private boolean findPath(UndirectedGraph graph, int u, int v, boolean[] visited, List<Integer> path) {
-        path.add(u);
-        if (u == v)
-            return true;
-        visited[u] = true;
-
-        for (int neighbor : graph.getNeighborhood(u)) {
-            if (!visited[neighbor]) {
-                if (findPath(graph, neighbor, v, visited, path))
-                    return true;
+        for (Set<Integer> block : blocks) {
+            boolean isSubset = false;
+            for (Set<Integer> otherBlock : blocks) {
+                if (!block.equals(otherBlock) && otherBlock.containsAll(block)) {
+                    isSubset = true;
+                    break;
+                }
             }
+
+            if (!isSubset)
+                filteredBlocks.add(block);
         }
 
-        path.remove(path.size() - 1);
+        return filteredBlocks;
+    }
+
+    public boolean hasTwoDisjointPaths(int u, int v) {
+        for (Set<Integer> cycle : allCycles) {
+            if (cycle.contains(u) && cycle.contains(v))
+                return true;
+        }
         return false;
+    }
+
+    public List<Set<Integer>> findAllCycles() {
+        List<Set<Integer>> allCycles = new ArrayList<>();
+        Set<List<Integer>> uniqueCycles = new HashSet<>();
+
+        graph.V().forEach(v -> {
+            Set<Integer> visited = new HashSet<>();
+            findCycles(v, v, new LinkedHashSet<>(), visited, allCycles, uniqueCycles);
+        });
+
+        return allCycles;
+    }
+
+    private void findCycles(int r, int v, Set<Integer> path, Set<Integer> visited, List<Set<Integer>> allCycles,
+            Set<List<Integer>> uniqueCycles) {
+        path.add(v);
+        visited.add(v);
+
+        for (int w : graph.getNeighborhood(v)) {
+            if (w == r && path.size() > 2) {
+                List<Integer> cycle = new ArrayList<>(path);
+                Collections.sort(cycle);
+
+                if (uniqueCycles.add(cycle))
+                    allCycles.add(new HashSet<>(path));
+
+            } else if (!visited.contains(w) && w > r)
+                findCycles(r, w, path, visited, allCycles, uniqueCycles);
+        }
+
+        visited.remove(v);
+        path.remove(v);
     }
 }
