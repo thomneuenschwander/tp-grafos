@@ -9,7 +9,7 @@ import graph.model.AdjacencyList;
 import graph.model.UndirectedGraph;
 
 public class Main {
-    static final String GRAPH_FILE_PATH = "graph-files/teste.txt";
+    static final String GRAPH_FILE_PATH = "graph-files/exemple.txt";
 
     static final BlockIdentifier twoDisjointPaths = new TwoDisjointPathsBlockIdentifier();
     static final BlockIdentifier articulations = new ArticulationsBlockIdentifier();

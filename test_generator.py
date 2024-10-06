@@ -1,6 +1,6 @@
-# pip install networkx
-import networkx as nx # link -> https://networkx.org/
+import networkx as nx
 import random
+import argparse
 
 def gerar_grafo(num_vertices, file_path, file_path_resp):
     g = nx.Graph()
@@ -11,7 +11,7 @@ def gerar_grafo(num_vertices, file_path, file_path_resp):
     for i in range(1, num_vertices):
         g.add_edge(i, i + 1)
 
-    num_edges_to_add = int(num_vertices * 0.2)# Gerar uma quantidade aleatória de arestas para serem adicionadas
+    num_edges_to_add = int(num_vertices * 0.2)  # Gerar uma quantidade aleatória de arestas para serem adicionadas
 
     # Adicionar arestas extras para criar múltiplos componentes biconexos
     while num_edges_to_add > 0:
@@ -31,18 +31,22 @@ def gerar_grafo(num_vertices, file_path, file_path_resp):
         for edge in edges:
             file.write(f"{edge[0]} {edge[1]}\n")
 
-    # Obter componentes biconexos,pontes e articulações
+    # Obter componentes biconexos, pontes e articulações
     blocks = list(nx.biconnected_components(g))
     articulations = list(nx.articulation_points(g))
     bridges = list(nx.bridges(g))
 
     with open(file_path_resp, 'w') as file:
-        file.write(f"Articulacoes: {articulations}\n")
-        file.write(f"Pontes: {bridges}\n")
-        file.write("Blocos:\n")
         for block in blocks:
-            file.write(f"{block}\n")
-    
-   
+            file.write(f"[{', '.join(map(str, block))}]\n")
 
-gerar_grafo(100, "graph-files/teste1.txt", "graph-files/teste1_resp.txt")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Gera um grafo com número de vértices especificado e salva em arquivos.')
+    parser.add_argument('num_vertices', type=int, help='Número de vértices do grafo')
+    parser.add_argument('file_path', type=str, help='Caminho para o arquivo de saída do grafo')
+    parser.add_argument('file_path_resp', type=str, help='Caminho para o arquivo de resposta com articulações, pontes e blocos')
+
+    args = parser.parse_args()
+
+    gerar_grafo(args.num_vertices, args.file_path, args.file_path_resp)
