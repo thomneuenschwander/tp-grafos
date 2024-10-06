@@ -38,6 +38,6 @@ O algoritmo de Tarjan é um método eficiente proposto por Robert Tarjan em 1972
 
 
 ## 🧩 Colaboradores
-| <img src="https://github.com/andreeluis.png" width="100" height="100" alt="André Luís"/> | <img src="https://github.com/thomneuenschwander.png" width="100" height="100" alt="Thomas Neuenschwander"/> |
-|:---:|:---:|
-| [Thomas <br> Neuenschwander](https://github.com/andreeluis) | [Thiago <br> Rezende](https://github.com/ThiagoRezendeAguiar) | [Luigi <br> Louback](https://github.com/LuigiLouback) |
+| <img src="https://github.com/thomneuenschwander.png" width="100" height="100" alt="Thomas Neuenschwander"/> | <img src="https://github.com/ThiagoRezendeAguiar.png" width="100" height="100" alt="Thiago Rezende"/> | <img src="https://github.com/LuigiLouback.png" width="100" height="100" alt="Luigi Louback"/> |
+|:---:|:---:|:---:|
+| [Thomas <br> Neuenschwander](https://github.com/thomneuenschwander) | [Thiago <br> Rezende](https://github.com/ThiagoRezendeAguiar) | [Luigi <br> Louback](https://github.com/LuigiLouback) |
