@@ -35,3 +35,9 @@ Este método verifica a conectividade do grafo ao testar a remoção de cada vé
 #### **iii.** Tarjan
 
 O algoritmo de Tarjan é um método eficiente proposto por Robert Tarjan em 1972 para encontrar componentes biconexos e articulações em um grafo. O algoritmo usa uma abordagem de busca em profundidade (DFS) para identificar todos os blocos e articulações em tempo linear, ou seja, com complexidade O(V + E), onde V é o número de vértices e E é o número de arestas. Este é um dos algoritmos mais eficientes para a identificação de blocos em grafos não direcionados.
+
+
+## 🧩 Colaboradores
+| <img src="https://github.com/thomneuenschwander.png" width="100" height="100" alt="Thomas Neuenschwander"/> | <img src="https://github.com/ThiagoRezendeAguiar.png" width="100" height="100" alt="Thiago Rezende"/> | <img src="https://github.com/LuigiLouback.png" width="100" height="100" alt="Luigi Louback"/> |
+|:---:|:---:|:---:|
+| [Thomas <br> Neuenschwander](https://github.com/thomneuenschwander) | [Thiago <br> Rezende](https://github.com/ThiagoRezendeAguiar) | [Luigi <br> Louback](https://github.com/LuigiLouback) |
