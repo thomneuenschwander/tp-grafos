@@ -26,3 +26,5 @@ replay_pid*
 graph-files/test
 
 g[1-9]*
+
+pmed_instances
