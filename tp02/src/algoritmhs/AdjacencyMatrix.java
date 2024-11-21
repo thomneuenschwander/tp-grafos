@@ -1,5 +1,7 @@
 package algoritmhs;
 
+import java.util.Arrays;
+
 public class AdjacencyMatrix extends WeightedClusterGraph {
     private int[][] adjMatrix;
 
@@ -24,6 +26,15 @@ public class AdjacencyMatrix extends WeightedClusterGraph {
         adjMatrix[u][v] = weight;
         adjMatrix[v][u] = weight;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        for (int[] vect : adjMatrix)
+            sb.append(Arrays.toString(vect) + "\n");
+        sb.delete(sb.length() - 1, sb.length());
+        return "[" + sb.toString() + "]";
     }
 
 }

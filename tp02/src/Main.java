@@ -6,7 +6,7 @@ import algoritmhs.GreedyKClustering;
 import io.GraphReader;
 
 public class Main {
-    static final String FILE_PATH = "pmed_instances/pmed2.txt";
+    static final String FILE_PATH = "pmed_instances/teste.txt";
 
     public static void main(String[] args) {
         AdjacencyMatrix graph = GraphReader.read(FILE_PATH);
