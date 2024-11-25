@@ -1,23 +1,39 @@
-import algorithms.BruteForceKCenter;
 import algorithms.Graph;
 import algorithms.KCenterAlgorithm;
+import io.CLI;
 import io.GraphReader;
 
 public class Main {
-    static final String FILE_PATH = "pmed_instances/pmed6.txt";
-
     public static void main(String[] args) {
+        try {
+            CLI argsParser = new CLI(args);
 
-        GraphReader reader = new GraphReader(FILE_PATH, true);
+            String filePath = argsParser.getFilePath();
+            KCenterAlgorithm.Type algorithmType = argsParser.getAlgorithm();
+            boolean verbose = argsParser.isVerbose();
 
-        Graph graph = reader.readGraph();
-        int k = reader.totalCenters();
+            if (verbose) {
+                System.out.println("File Path: " + filePath);
+                System.out.println("Algorithm: " + algorithmType);
+                System.out.println("Verbose Mode: ON");
+            }
 
-        KCenterAlgorithm bruteForce = new BruteForceKCenter(graph);
-        bruteForce.initialize(k);
-        bruteForce.computeCenters();
+            GraphReader reader = new GraphReader(filePath, verbose);
 
-        System.out.println(bruteForce.getRadius());
+            Graph graph = reader.readGraph();
+            int k = reader.totalCenters();
 
+            KCenterAlgorithm algorithm = algorithmType.createInstance(graph);
+            algorithm.initialize(k);
+            algorithm.computeCenters();
+
+            if(verbose)
+                System.out.print("Radius: ");
+            System.out.println(algorithm.getRadius());
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            CLI.usage();
+        }
     }
 }
