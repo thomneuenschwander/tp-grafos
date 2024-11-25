@@ -24,7 +24,7 @@ def read_graph_and_compute_shortest_paths(file_path):
 
     return n, k, distances
 
-file_path = "pmed_instances/pmed1.txt"
+file_path = "pmed_instances/teste.txt"
 n, k, distances = read_graph_and_compute_shortest_paths(file_path)
 
 problem = LpProblem("k-Centers", LpMinimize)

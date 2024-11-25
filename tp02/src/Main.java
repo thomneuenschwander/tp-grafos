@@ -1,25 +1,23 @@
-import java.util.List;
-import java.util.Map;
-
-import algoritmhs.AdjacencyMatrix;
-import algoritmhs.GreedyKClustering;
+import algorithms.BruteForceKCenter;
+import algorithms.Graph;
+import algorithms.KCenterAlgorithm;
 import io.GraphReader;
 
 public class Main {
-    static final String FILE_PATH = "pmed_instances/teste.txt";
+    static final String FILE_PATH = "pmed_instances/pmed6.txt";
 
     public static void main(String[] args) {
-        AdjacencyMatrix graph = GraphReader.read(FILE_PATH);
 
-        GreedyKClustering greedy = new GreedyKClustering(graph);
+        GraphReader reader = new GraphReader(FILE_PATH, true);
 
-        Map<Integer, List<Integer>> clusters = greedy.findClusters();
+        Graph graph = reader.readGraph();
+        int k = reader.totalCenters();
 
-        System.out.println("\n=== Clustering Result ===");
-        System.out.println("Clusters: " + clusters.size() + " - Radius: "
-                + greedy.calculateRadius() + "\n");
+        KCenterAlgorithm bruteForce = new BruteForceKCenter(graph);
+        bruteForce.initialize(k);
+        bruteForce.computeCenters();
 
-        clusters.forEach((center, vertices) -> System.out.println(
-                "Center: " + center + ", number of vertices " + vertices.size() + ", vertices=" + vertices));
+        System.out.println(bruteForce.getRadius());
+
     }
 }
