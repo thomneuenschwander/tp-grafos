@@ -23,13 +23,13 @@ public class Main {
             Graph graph = reader.readGraph();
             int k = reader.totalCenters();
 
+            if(verbose)
+                System.out.print("Calculating solution... ");
             KCenterAlgorithm algorithm = algorithmType.createInstance(graph);
             algorithm.initialize(k);
             algorithm.computeCenters();
 
-            if(verbose)
-                System.out.print("Radius: ");
-            System.out.println(algorithm.getRadius());
+            System.out.println("Radius: " + algorithm.getRadius());
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
