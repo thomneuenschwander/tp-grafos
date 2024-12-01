@@ -1,0 +1,3 @@
+Radius: 17
+Execution time: .649204036s
+Max memory used: 58184 KB
