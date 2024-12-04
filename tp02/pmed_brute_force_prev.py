@@ -97,7 +97,7 @@ os.makedirs(PREDICTIONS_DIR, exist_ok=True)
 
 for instance, predicted_time in zip(prev_data, T_predicted):
     instance_id = instance['instance']
-    prediction_filename = f"pmed{instance_id}_result_prev.txt"
+    prediction_filename = f"pmed{instance_id}_result.txt"
     prediction_filepath = os.path.join(PREDICTIONS_DIR, prediction_filename)
     
     with open(prediction_filepath, 'w') as prediction_file:
